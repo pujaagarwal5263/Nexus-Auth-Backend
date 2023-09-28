@@ -34,7 +34,7 @@ Send an email to a recepient.
 }
 ```
 
-## 2. POST: /star_email
+## 3. POST: /star_email
 
 **Description:**
 Star an email and show it in the favorites section.
@@ -100,4 +100,19 @@ Get scheduled emails from the database to display in the scheduled section.
 {
   "email": "current-user@gmail.com"
 }
+```
+
+## 7. GET: /get_user_details
+
+**Description:**
+Get users details by sending data in parameter.
+
+**URL structure:**
+```
+/get_user_details/:emailAddress
+```
+
+**Example**
+```
+/get_user_details/:current-user@gmail.com
 ```

@@ -6,6 +6,7 @@ const controllers = require('../controllers/controllers')
 // router.get('/',controllers.hello);
 router.post('/nylas/generate-auth-url',express.json(),controllers.generateAuthURL);
 router.post('/nylas/exchange-mailbox-token',express.json(),controllers.getTokenFromCode)
+router.get('/get_user_details/:emailAddress',controllers.getUserDetails)
 router.post('/send_email', controllers.sendEmail);
 router.get("/read_email",controllers.readInbox);
 router.post("/star_email",controllers.starEmail);

@@ -52,7 +52,7 @@ const getTokenFromCode = async (req, res) => {
     // console.log("Generated Access Token",accessToken);
 
     let user = await User.findOne({ email: emailAddress });
-    console.log(user);
+
     if (user) {
       // User exists, update the access token
       user.accessToken = accessToken;
@@ -77,6 +77,28 @@ const getTokenFromCode = async (req, res) => {
     return res.send(err);
   }
 };
+
+const getUserDetails = async(req,res) =>{
+  try{
+    const {emailAddress} = req.params; 
+    let user = await User.findOne({ email: emailAddress });
+    if (user) {
+      const userToken = user?.accessToken;
+      const nylas = NylasConfig.with(userToken);
+      
+      const account = await nylas.account.get();
+      const name = account.name;
+      const email = account.emailAddress;
+      
+      return res.status(200).json({ name: name, email: email });
+    } else {
+      return res.status(404).json({ message: "User not found" });
+    }
+  }catch(err){
+    console.log(err);
+    return res.status(500).send("Internal Sever Error");
+  }
+}
 
 const sendEmail = async (req, res) => {
   try {
@@ -292,5 +314,5 @@ const getScheduledMail = async (req, res) => {
   }
 };
 
-module.exports = { hello, generateAuthURL, getTokenFromCode, sendEmail, readInbox, starEmail, getStarredMail, scheduleMail, getScheduledMail };
+module.exports = { hello, generateAuthURL, getTokenFromCode, sendEmail, readInbox, starEmail, getStarredMail, scheduleMail, getScheduledMail, getUserDetails };
 
