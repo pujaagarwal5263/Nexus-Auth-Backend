@@ -8,6 +8,7 @@ This documentation provides information about the payload structure required for
 Read a user's inbox when the email page is opened for the first time.
 
 **Request Payload:**
+
 ```json
 {
   "email": "current-user@gmail.com"
@@ -20,6 +21,7 @@ Read a user's inbox when the email page is opened for the first time.
 Send an email to a recepient.
 
 **Request Payload:**
+
 ```json
 {
   "subject": "test",
@@ -40,6 +42,7 @@ Send an email to a recepient.
 Star an email and show it in the favorites section.
 
 **Request Payload:**
+
 ```json
 {
   "email": "current-user@gmail.com",
@@ -55,12 +58,14 @@ Star an email and show it in the favorites section.
   }
 }
 ```
+
 ## 4. GET: /starred_mails
 
 **Description:**
 Get starred emails from the database to display in the favorites section.
 
 **Request Payload:**
+
 ```json
 {
   "email": "current-user@gmail.com"
@@ -73,6 +78,7 @@ Get starred emails from the database to display in the favorites section.
 Schedule an email to be sent at a specified date and time.
 
 **Request Payload:**
+
 ```json
 {
   "email": "current-user@gmail.com",
@@ -96,6 +102,7 @@ Schedule an email to be sent at a specified date and time.
 Get scheduled emails from the database to display in the scheduled section.
 
 **Request Payload:**
+
 ```json
 {
   "email": "current-user@gmail.com"
@@ -108,11 +115,13 @@ Get scheduled emails from the database to display in the scheduled section.
 Get users details by sending data in parameter.
 
 **URL structure:**
+
 ```
 /get_user_details/:emailAddress
 ```
 
 **Example**
+
 ```
 /get_user_details/:current-user@gmail.com
 ```

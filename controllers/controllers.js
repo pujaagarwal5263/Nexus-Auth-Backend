@@ -1,4 +1,6 @@
 const { NylasConfig } = require("../nylas-config");
+const cron = require("node-cron");
+const { default: Event } = require("nylas/lib/models/event");
 const User = require("../models/userSchema");
 const { Scope } = require("nylas/lib/models/connect");
 const { default: Draft } = require("nylas/lib/models/draft");
@@ -52,7 +54,7 @@ const getTokenFromCode = async (req, res) => {
     // console.log("Generated Access Token",accessToken);
 
     let user = await User.findOne({ email: emailAddress });
-    let name="";
+    let name = "";
     if (user) {
       // User exists, update the access token
       user.accessToken = accessToken;
@@ -74,9 +76,9 @@ const getTokenFromCode = async (req, res) => {
     }
 
     return res.status(200).json({
-      id: user._id, 
+      id: user._id,
       email: user.email,
-      name: name
+      name: name,
     });
     // return res.send("Access Token Successfully Saved.")
   } catch (err) {
@@ -85,27 +87,27 @@ const getTokenFromCode = async (req, res) => {
   }
 };
 
-const getUserDetails = async(req,res) =>{
-  try{
-    const {emailAddress} = req.params; 
+const getUserDetails = async (req, res) => {
+  try {
+    const { emailAddress } = req.params;
     let user = await User.findOne({ email: emailAddress });
     if (user) {
       const userToken = user?.accessToken;
       const nylas = NylasConfig.with(userToken);
-      
+
       const account = await nylas.account.get();
       const name = account.name;
       const email = account.emailAddress;
-      
+
       return res.status(200).json({ name: name, email: email });
     } else {
       return res.status(404).json({ message: "User not found" });
     }
-  }catch(err){
+  } catch (err) {
     console.log(err);
     return res.status(500).send("Internal Sever Error");
   }
-}
+};
 
 const sendEmail = async (req, res) => {
   try {
@@ -321,5 +323,116 @@ const getScheduledMail = async (req, res) => {
   }
 };
 
-module.exports = { hello, generateAuthURL, getTokenFromCode, sendEmail, readInbox, starEmail, getStarredMail, scheduleMail, getScheduledMail, getUserDetails };
+const getUserAvailability = async (req, res) => {
+  const email = req.query.email;
+  console.log(email);
+  if (!email) {
+    return res.status(422).json({ message: "Please send sender's email id" });
+  }
+  const user = await User.findOne({ email });
 
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+  const userToken = user?.accessToken;
+  let calendarID;
+  const nylas = NylasConfig.with(userToken);
+
+  const calendars = await nylas.calendars.list().then((calendars) => {
+    calendars?.forEach((calendar) => {
+      if (calendar.isPrimary) {
+        calendarID = calendar.id;
+      }
+    });
+  });
+
+  const sevenDaysFromNow = new Date();
+  sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
+
+  const endsBeforeISO = sevenDaysFromNow.toISOString();
+
+  const events = await nylas.events.list({
+    calendar_id: calendarID,
+    starts_after: Date.now(),
+    ends_before: endsBeforeISO,
+  });
+  return res.json(events);
+};
+
+const readEvents = async (req, res) => {
+  const { calendarId, startsAfter, endsBefore, limit } = req.query;
+
+  const events = await NylasConfig.with(token)
+    .events.list({
+      calendar_id: calendarId,
+      starts_after: startsAfter,
+      ends_before: endsBefore,
+      limit: limit,
+    })
+    .then((events) => events);
+
+  return res.json(events);
+};
+
+const readCalendars = async (req, res) => {
+  const calendars = await NylasConfig.with(token)
+    .calendars.list()
+    .then((calendars) => calendars);
+
+  return res.json(calendars);
+};
+
+const createEvents = async (req, res) => {
+  const { email, startTime, endTime, description, title, participants } =
+    req.body;
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+  const userToken = user?.accessToken;
+  let calendarID = "";
+  const nylas = NylasConfig.with(userToken);
+
+  const calendars = await nylas.calendars.list().then((calendars) => {
+    calendars?.forEach((calendar) => {
+      if (calendar.isPrimary) {
+        calendarID = calendar.id;
+      }
+    });
+  });
+
+  const event = new Event(nylas);
+  event.calendarId = calendarID;
+  event.title = title;
+  event.description = description;
+  event.when.startTime = startTime;
+  event.when.endTime = endTime;
+
+  if (participants) {
+    event.participants = participants
+      .split(/s*,s*/)
+      .map((email) => ({ email }));
+  }
+  event.notify_participants = true;
+  event.save();
+
+  return res.json(event);
+};
+
+module.exports = {
+  hello,
+  generateAuthURL,
+  getTokenFromCode,
+  sendEmail,
+  readInbox,
+  starEmail,
+  getStarredMail,
+  scheduleMail,
+  getScheduledMail,
+  getUserDetails,
+  getUserAvailability,
+  createEvents,
+  readEvents,
+  readCalendars,
+};
