@@ -52,11 +52,17 @@ const getTokenFromCode = async (req, res) => {
     // console.log("Generated Access Token",accessToken);
 
     let user = await User.findOne({ email: emailAddress });
-
+    let name="";
     if (user) {
       // User exists, update the access token
       user.accessToken = accessToken;
       await user.save();
+
+      //to get user details
+      const nylas = NylasConfig.with(accessToken);
+      const account = await nylas.account.get();
+      name = account.name;
+
       console.log("Access Token was updated for: " + emailAddress);
     } else {
       // User doesn't exist, create a new user
@@ -67,9 +73,10 @@ const getTokenFromCode = async (req, res) => {
       console.log("New user created with email: " + emailAddress);
     }
 
-    return res.json({
-      id: user._id, // Assuming your User model uses "_id" as the primary key
-      emailAddress: user.email,
+    return res.status(200).json({
+      id: user._id, 
+      email: user.email,
+      name: name
     });
     // return res.send("Access Token Successfully Saved.")
   } catch (err) {
