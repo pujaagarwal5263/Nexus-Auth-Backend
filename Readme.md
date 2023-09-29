@@ -2,7 +2,7 @@
 
 This documentation provides information about the payload structure required for each endpoint.
 
-## 1. GET: /read_email
+## 1. POST: /read_email
 
 **Description:**
 Read a user's inbox when the email page is opened for the first time.
@@ -124,4 +124,35 @@ Get users details by sending data in parameter.
 
 ```
 /get_user_details/:current-user@gmail.com
+```
+
+## 8. GET: /get_availability
+
+**Description:**
+Get availablity of any authenticated user from database. Get all calendar events in upcoming 7 days.
+
+**URL structure:**
+
+```
+/get_availability/?email=user@gmail.com
+```
+
+<strong>put email ID of user-whose-availability-is-to-be-checked</strong>
+
+## 9. POST: /create-events
+
+**Description:**
+Create an event from your mail ID or Google Account and add more participants.
+
+**Request Payload:**
+
+```json
+{
+  "email": "current-user@gmail.com",
+  "startTime":"2023-07-30T15:05:00.000Z",
+  "endTime":"2023-07-30T17:05:00.000Z",
+  "title":"Meeting for Nylas Setup",
+  "description":"lorem ipsum ...",
+  "participants":"participant1@gmail.com,participant2@gmail.com"
+}
 ```
