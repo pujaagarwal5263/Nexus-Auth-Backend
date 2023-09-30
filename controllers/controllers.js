@@ -240,7 +240,8 @@ const readInbox = async (req, res) => {
           snippet: message.snippet,
           sentTo: message.to,
           sentBy: message.from,
-          date: message.date
+          date: message.date,
+          body: message.body
           // body: message.body
         });
       });
