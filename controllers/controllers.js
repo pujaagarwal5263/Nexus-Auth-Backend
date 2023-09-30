@@ -462,8 +462,8 @@ const createEvents = async (req, res) => {
 
     const newStartTime =startTime;
     const newEndTime = endTime;
-    const existingStartTime = formatDate(existingEvent.when.startTime,0)
-    const existingEndTime =  formatDate(existingEvent.when.endTime,0)
+    const existingStartTime = formatDate(existingEvent.when.startTime,330)
+    const existingEndTime =  formatDate(existingEvent.when.endTime,330)
 
     // console.log(newStartTime);
    // console.log(existingStartTime);
