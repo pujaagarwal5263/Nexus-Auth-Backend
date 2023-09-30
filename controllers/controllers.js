@@ -43,6 +43,43 @@ const categorizeTone = (sentimentData) => {
   }
 }
 
+const getSlots = async(userToken, calendarID) =>{
+  const nylas = NylasConfig.with(userToken);
+
+  const sevenDaysFromNow = new Date();
+  sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
+
+  const endsBeforeISO = sevenDaysFromNow.toISOString();
+
+  const events = await nylas.events.list({
+    calendar_id: calendarID,
+    starts_after: Date.now(),
+    ends_before: endsBeforeISO,
+  });
+  return events;
+}
+
+const formatDate = (timestamp, timezoneOffset) => {
+  const date = new Date(timestamp * 1000); // Multiply by 1000 to convert seconds to milliseconds
+
+  // Adjust the date and time based on the timezone offset
+  date.setMinutes(date.getMinutes() + timezoneOffset);
+
+  // Get the various components of the adjusted date and time
+  const year = date.getUTCFullYear();
+  const month = (date.getUTCMonth() + 1).toString().padStart(2, '0'); // Months are zero-indexed, so add 1
+  const day = date.getUTCDate().toString().padStart(2, '0');
+  const hours = date.getUTCHours().toString().padStart(2, '0');
+  const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+  const seconds = date.getUTCSeconds().toString().padStart(2, '0');
+  const milliseconds = date.getUTCMilliseconds().toString().padStart(3, '0');
+
+  // Format the date and time as an ISO 8601 string
+  const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
+
+  return formattedDate;
+};
+
 const hello = (req, res) => {
   return res.send("server is running");
 };
@@ -417,6 +454,33 @@ const createEvents = async (req, res) => {
       }
     });
   });
+
+  const existingEvents = await getSlots(userToken,calendarID)
+  
+
+  const clash = existingEvents.some((existingEvent) => {
+
+    const newStartTime =startTime;
+    const newEndTime = endTime;
+    const existingStartTime = formatDate(existingEvent.when.startTime,0)
+    const existingEndTime =  formatDate(existingEvent.when.endTime,0)
+
+    // console.log(newStartTime);
+   // console.log(existingStartTime);
+
+    if (newStartTime >= existingEndTime || newEndTime <= existingStartTime) {
+      return false; 
+    } else {
+      console.error('Overlap detected between new event and existing event');
+      return true; 
+    }
+  });
+
+  
+  if (clash) {
+    return res.status(400).json({ error: 'Event clashes with existing events.' });
+  }
+
 
   const event = new Event(nylas);
   event.calendarId = calendarID;
