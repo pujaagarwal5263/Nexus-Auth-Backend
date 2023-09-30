@@ -8,14 +8,14 @@ const Sentiment = require('sentiment');
 const summarizer = require("node-summarizer").SummarizerManager;
 
 const labelMap = {
-  Inbox: "inbox",
+  "Inbox": "inbox",
   "Sent Mail": "sent",
-  Trash: "trash",
+  "Trash": "trash",
   "Category Social": "social",
   "Category Updates": "updates",
-  Important: "important",
+  "Important": "important",
   "Category Personal": "personal",
-  Spam: "spam",
+  "Spam": "spam",
   "All Mail": "all",
   "Category Promotions": "promotions",
 };
@@ -232,11 +232,15 @@ const readInbox = async (req, res) => {
         messageData[labelKey] = [];
       }
       messages.forEach((message) => {
+//console.log(message);
         messageData[labelKey].push({
           ID: message.id,
           subject: message.subject,
           unread: message.unread,
           snippet: message.snippet,
+          sentTo: message.to,
+          sentBy: message.from,
+          date: message.date
           // body: message.body
         });
       });
