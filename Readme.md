@@ -59,7 +59,7 @@ Star an email and show it in the favorites section.
 }
 ```
 
-## 4. GET: /starred_mails
+## 4. POST: /starred_mails
 
 **Description:**
 Get starred emails from the database to display in the favorites section.
@@ -96,7 +96,7 @@ Schedule an email to be sent at a specified date and time.
 }
 ```
 
-## 6. GET: /scheduled_mails
+## 6. POST: /scheduled_mails
 
 **Description:**
 Get scheduled emails from the database to display in the scheduled section.
