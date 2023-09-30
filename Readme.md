@@ -156,3 +156,26 @@ Create an event from your mail ID or Google Account and add more participants.
   "participants":"participant1@gmail.com,participant2@gmail.com"
 }
 ```
+
+## 10. POST: /summarize
+
+**Description:**
+To summarize text in given number of sentences using NLP based library.
+
+```json
+{
+  "content": "lorem ipsum ...",
+  "number":3
+}
+```
+
+## 11. POST: /sentiment
+
+**Description:**
+To get sentiment analysis of given content using NLP based library.
+
+```json
+{
+  "content": "lorem ipsum ..."
+}
+```

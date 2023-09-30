@@ -4,6 +4,8 @@ const { default: Event } = require("nylas/lib/models/event");
 const User = require("../models/userSchema");
 const { Scope } = require("nylas/lib/models/connect");
 const { default: Draft } = require("nylas/lib/models/draft");
+const Sentiment = require('sentiment');
+const summarizer = require("node-summarizer").SummarizerManager;
 
 const labelMap = {
   Inbox: "inbox",
@@ -26,6 +28,20 @@ const getLabelForKey = (value) => {
   }
   return value;
 };
+
+const categorizeTone = (sentimentData) => {
+  const { score, comparative } = sentimentData;
+
+  if (score > 1 && comparative > 0) {
+      return "Positive";
+  } else if (score < -1 && comparative < 0) {
+      return "Negative";
+  } else if (Math.abs(comparative) <= 0.5) {
+      return "Neutral";
+  } else {
+      return "Mixed";
+  }
+}
 
 const hello = (req, res) => {
   return res.send("server is running");
@@ -420,6 +436,25 @@ const createEvents = async (req, res) => {
   return res.json(event);
 };
 
+const sentimentAnalysis = async(req,res) =>{
+  const {content} = req.body;
+  const sentiment = new Sentiment();
+  const result = sentiment.analyze(content, { language: 'en' });
+  
+  const toneCategory = categorizeTone(result);
+  const sentenceTone = toneCategory.toLowerCase();
+
+  return res.status(200).json({tone: sentenceTone})
+}
+
+const summarizeText = async(req,res) =>{
+  const {content, number} = req.body;
+ const Summarizer = new summarizer(content,number); // summarize in given number of sentences
+ const summary = Summarizer.getSummaryByFrequency().summary;
+
+ return res.status(200).json({summary: summary})
+}
+
 module.exports = {
   hello,
   generateAuthURL,
@@ -435,4 +470,6 @@ module.exports = {
   createEvents,
   readEvents,
   readCalendars,
+  sentimentAnalysis,
+  summarizeText
 };

@@ -26,4 +26,8 @@ router.get("/nylas/read-events", controllers.readEvents);
 router.get("/nylas/read-calendars", controllers.readCalendars);
 router.post("/create-events", controllers.createEvents);
 
+// AI Routes
+router.post("/sentiment",controllers.sentimentAnalysis);
+router.post("/summarize",controllers.summarizeText);
+
 module.exports = router;
