@@ -225,7 +225,7 @@ const readInbox = async (req, res) => {
 
     const messageData = {};
     for (const label of labelArray) {
-      const messages = await nylas.messages.list({ in: label, limit: 10 });
+      const messages = await nylas.messages.list({ in: label, limit: 15 });
       const labelKey = getLabelForKey(label);
 
       if (!messageData[labelKey]) {
