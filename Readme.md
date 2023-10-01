@@ -9,7 +9,7 @@ NYLAS_API_SERVER=https://api.nylas.com
 MONGODB_URL=mongodb://localhost:27017
 ```
 
-2. Configure redirect_uri in <strong>generateAuthURL</strong> function in controllers to:
+2. Configure redirect_uri in <strong>generateAuthURL</strong> function in controllers and your Nylas App Setting dashboard to:
 ```
 FRONTEND_URL/mail
 ```
