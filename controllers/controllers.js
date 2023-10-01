@@ -305,6 +305,8 @@ const getStarredMail = async (req, res) => {
 const scheduleMail = async (req, res) => {
   const userEmail = req.body.email;
   const scheduledEmail = req.body.scheduledEmail;
+  const scheduledEmailID = req.body.scheduledEmail.ID;
+  
   if (!userEmail || !scheduledEmail) {
     return res.status(422).json({ message: "Please send all fields" });
   }
@@ -347,6 +349,10 @@ const scheduleMail = async (req, res) => {
           to: scheduledEmail.sentTo,
         });
         await draft.send();
+        await User.updateOne(
+          { _id: user._id },
+          { $pull: { scheduledEmails: { ID: scheduledEmailID } } }
+        );
         //once the send is successful try to delete from scheduled array
         console.log("Scheduled email sent:", scheduledEmail);
       } catch (error) {
