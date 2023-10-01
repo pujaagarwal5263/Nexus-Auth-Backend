@@ -1,7 +1,7 @@
 # How to start guide?
 1. Create your env with the following data:
    
-```json
+```
 PORT=8000
 NYLAS_CLIENT_ID=nylasclient
 NYLAS_CLIENT_SECRET=nylasclientsecret
