@@ -1,9 +1,19 @@
 const mongoose = require('mongoose');
 
 const emailSchema = new mongoose.Schema({
+  ID: String,
   subject: String,
   body: String,
-  recipient_array: [
+  unread: Boolean,
+  snippet: String,
+  date: Date,
+  sentTo: [
+    {
+      name: String,
+      email: String,
+    },
+  ],
+  sentBy:[
     {
       name: String,
       email: String,

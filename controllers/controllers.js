@@ -325,6 +325,7 @@ const scheduleMail = async (req, res) => {
 
     const schedulingTime = scheduledEmail.scheduledAt;
     const dateTime = new Date(schedulingTime);
+    console.log(dateTime);
 
     // Extract date and time components
     const month = dateTime.getUTCMonth() + 1; // Months are zero-based, so add 1
@@ -343,9 +344,8 @@ const scheduleMail = async (req, res) => {
         const draft = new Draft(nylas, {
           subject: scheduledEmail.subject,
           body: scheduledEmail.body,
-          to: scheduledEmail.recipient_array,
+          to: scheduledEmail.sentTo,
         });
-        console.log("hii im here");
         await draft.send();
         //once the send is successful try to delete from scheduled array
         console.log("Scheduled email sent:", scheduledEmail);

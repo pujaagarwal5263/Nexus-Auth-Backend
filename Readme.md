@@ -45,16 +45,26 @@ Star an email and show it in the favorites section.
 
 ```json
 {
-  "email": "current-user@gmail.com",
+  "email": "pujuagarwal5263@gmail.com",
   "starredEmail": {
+    "ID":"w234",
     "subject": "testt",
-    "body": "this is email body",
-    "recipient_array": [
+    "unread": true,
+    "snippet": "Hi",
+    "sentTo": [
       {
         "name": "puja",
         "email": "test@gmail.com"
       }
-    ]
+    ],
+    "sentBy": [
+      {
+        "name": "Ajinkya Palaskar",
+        "email": "palaskarajinkya22@gmail.com"
+      }
+    ],
+    "date": "2023-09-30T14:24:16.000Z",
+    "body": "<div dir=\"ltr\">Hi</div>"
   }
 }
 ```
@@ -81,17 +91,27 @@ Schedule an email to be sent at a specified date and time.
 
 ```json
 {
-  "email": "current-user@gmail.com",
+  "email": "pujuagarwal5263@gmail.com",
   "scheduledEmail": {
+    "ID":"w234",
     "subject": "testt",
-    "body": "this is email body",
-    "recipient_array": [
+    "unread": true,
+    "snippet": "Hi",
+    "sentTo": [
       {
         "name": "puja",
         "email": "test@gmail.com"
       }
     ],
-    "scheduledAt": "2023-09-06T15:30:00.000Z"
+    "sentBy": [
+      {
+        "name": "Ajinkya Palaskar",
+        "email": "palaskarajinkya22@gmail.com"
+      }
+    ],
+    "date": "2023-09-30T14:24:16.000Z",
+    "body": "<div dir=\"ltr\">Hi</div>",
+    "scheduledAt": "2023-10-01T11:42:00.000Z"
   }
 }
 ```
