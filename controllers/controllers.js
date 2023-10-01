@@ -89,7 +89,7 @@ const generateAuthURL = async (req, res) => {
 
   const authUrl = NylasConfig.urlForAuthentication({
     loginHint: body.email_address,
-    redirectURI: "http://localhost:3000/mail",
+    redirectURI: "https://productivity-nexus.vercel.app/mail",
     scopes: [Scope.EmailModify, Scope.EmailSend, Scope.Calendar],
   });
 
