@@ -1,3 +1,29 @@
+# How to start guide?
+1. Create your env with the following data:
+   
+```json
+PORT=8000
+NYLAS_CLIENT_ID=nylasclient
+NYLAS_CLIENT_SECRET=nylasclientsecret
+NYLAS_API_SERVER=https://api.nylas.com
+MONGODB_URL=mongodb://localhost:27017
+```
+
+2. Configure redirect_uri in <strong>generateAuthURL</strong> function in controllers to:
+```
+FRONTEND_URL/mail
+```
+
+3. Install dependencies:
+```
+npm install
+```
+
+4. Start the code:
+```
+npm start
+```
+
 # Nylas Endpoints Documentation
 
 This documentation provides information about the payload structure required for each endpoint.
