@@ -46,10 +46,10 @@ const categorizeTone = (sentimentData) => {
 const getSlots = async(userToken, calendarID) =>{
   const nylas = NylasConfig.with(userToken);
 
-  const sevenDaysFromNow = new Date();
-  sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
+  const twentyDaysFromNow = new Date();
+  twentyDaysFromNow.setDate(twentyDaysFromNow.getDate() + 20);
 
-  const endsBeforeISO = sevenDaysFromNow.toISOString();
+  const endsBeforeISO = twentyDaysFromNow.toISOString();
 
   const events = await nylas.events.list({
     calendar_id: calendarID,
@@ -470,25 +470,23 @@ const createEvents = async (req, res) => {
   
 
   const clash = existingEvents.some((existingEvent) => {
-
-    const newStartTime =startTime;
+    const newStartTime = startTime;
     const newEndTime = endTime;
-    // const existingStartTime = formatDate(existingEvent.when.startTime,330)
-    // const existingEndTime =  formatDate(existingEvent.when.endTime,330)
-    
-    const existingStartTime =existingEvent.when.startTime
-    const existingEndTime = existingEvent.when.endTime
+    const existingStartTime = existingEvent?.when?.startTime;
+    const existingEndTime = existingEvent?.when?.endTime;
 
-    // console.log(newStartTime);
-   // console.log(existingStartTime);
-
-    if (newStartTime >= existingEndTime || newEndTime <= existingStartTime) {
-      return false; 
-    } else {
-      console.error('Overlap detected between new event and existing event');
-      return true; 
+    // Check if existing event start time and end time are defined
+    if (existingStartTime && existingEndTime) {
+  
+      if (newStartTime >= existingEndTime || newEndTime <= existingStartTime) {
+        return false;
+      } else {
+        console.error("Overlap detected between new event and existing event");
+        return true;
+      }
     }
   });
+  
 
   
   if (clash) {
