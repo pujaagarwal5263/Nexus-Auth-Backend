@@ -411,7 +411,7 @@ const getUserAvailability = async (req, res) => {
   });
 
   const sevenDaysFromNow = new Date();
-  sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
+  sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 20);
 
   const endsBeforeISO = sevenDaysFromNow.toISOString();
 
